@@ -6,40 +6,32 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.Reporter;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
+import libraries.Utilities;
+
+/**
+ * This class file contains Test scripts
+ * @author Madhukara R S
+ */
 public class AmazonLogging {
 
-	public static void main(String[] args) throws InterruptedException {
-		// TODO Auto-generated method stub
+		public static int i =0;
+		WebDriver driver;
+		Utilities utilities = new Utilities();
 
-		//Checking the OS and finding the directory
-		if(System.getProperty("os.name").contains("Windows")){
-			System.setProperty("webdriver.gecko.driver",System.getProperty("user.dir")+File.separator+"geckodriver.exe");
-			}
-			else{
-				System.setProperty("webdriver.gecko.driver",System.getProperty("user.dir")+File.separator+"geckodriver");	
-			}
-		
-		WebDriver driver = new FirefoxDriver();    //Lunches Firefox browser
-		Reporter.log("Firefox browser launched successfully", true);
-		
-		driver.get("https://www.amazon.in/"); //Launch the URL in the browser
-		String title = driver.getTitle();    //Get the Window title
-		Reporter.log("Window title is : "+ title, true);
-		
-		// Compare the window title of home page
-		if(title.equalsIgnoreCase("Online Shopping: Shop Online for Mobiles, Books, Watches, Shoes and More - Amazon.in")){
-			Reporter.log("PASS - Home page displayed successfully", true);
-		}else {
-			Reporter.log("FAIL - Home page did not display successfully", true);
+		@BeforeTest
+		public void startBrowser() {
+			driver = utilities.launchBrowser();
 		}
 		
-		String url = driver.getCurrentUrl();   //Get the Window URL
-		Reporter.log("Window URL is : "+ url, true);
-		String pageSource = driver.getPageSource();   //Get the Page source
-		
+		@Test(enabled = true)
+		public void webdriverCommands() {
 		//Find Sign In element using xpath
 		WebElement signIn = driver.findElement(By.xpath("//a[@id='nav-link-yourAccount']")); 
 		String text = signIn.getText();  //Get the text of the webelement
@@ -83,12 +75,18 @@ public class AmazonLogging {
 		//Verifies the My Account text with the expected value using Test NG assertions
 		Assert.assertEquals(myAccountText, "Your Account", "FAIL - My Account page is not displayed");
 		
-		WebElement signOut = driver.findElement(By.id("nav-item-signout")); //Identify Sign Out Button
-		signOut.click();  //Clicks Signout button
-		Reporter.log("PASS - Sign Out Button Clicked Successfully", true);
+		WebElement account = driver.findElement(By.xpath("//div[@class='a-row a-spacing-base']/h1"));
+		Actions action = new Actions(driver);
+		action.moveToElement(account).build().perform();
+		WebElement signOut = driver.findElement(By.id("nav-item-signout"));
+		action.moveToElement(signOut).click().build().perform();
 		
 		driver.close();  //Closes the active Firefox browser
 		
 	}
 
+		@AfterTest
+		public void endBrowser() {
+			
+		}
 }
