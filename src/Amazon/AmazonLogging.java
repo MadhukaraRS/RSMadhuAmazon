@@ -7,13 +7,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import libraries.ProjectSpecificMethods;
 import libraries.Utilities;
+import pageObjects.MyAccountPageObject;
+import pageObjects.SigninPageObject;
 
 /**
  * This class file contains Test scripts
@@ -23,11 +27,23 @@ public class AmazonLogging {
 
 		public static int i =0;
 		WebDriver driver;
+		WebDriverWait wait;
 		Utilities utilities = new Utilities();
-
+		SigninPageObject signIn;
+		MyAccountPageObject myAccount;
+		ProjectSpecificMethods projectSpecificMethods;
+			
+		
+		
 		@BeforeTest
 		public void startBrowser() {
 			driver = utilities.launchBrowser();
+			wait = new WebDriverWait(driver, 30);
+			signIn = new SigninPageObject(driver, wait);
+			myAccount = new MyAccountPageObject(driver, wait);
+			ProjectSpecificMethods = new ProjectSpecificMethods(driver, wait);
+			
+			
 		}
 		
 		@Test(enabled = true)
